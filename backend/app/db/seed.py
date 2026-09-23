@@ -8,14 +8,33 @@ from backend.app.db.base import (
     MaterialPrice,
     PriceSource,
     Unit,
+    User,
 )
+
 from backend.app.db.session import SessionLocal
 
 
 def seed():
     db = SessionLocal()
-
+    
     try:
+        # ---------------------------------------------------------
+        # Development User
+        # ---------------------------------------------------------
+        user = db.scalar(
+            select(User).where(User.email == "dev@buildcost.local")
+        )
+
+        if not user:
+            db.add(
+                User(
+                    name="BuildCost Developer",
+                    email="dev@buildcost.local",
+                    is_active=True,
+                )
+            )
+
+        db.flush()
         # ---------------------------------------------------------
         # Units
         # ---------------------------------------------------------
